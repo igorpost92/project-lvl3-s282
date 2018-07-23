@@ -5,7 +5,11 @@ extends:
   - 'airbnb-base'
 
 env:
+  node: true
   browser: true
   jest: true
 
 parser: babel-eslint
+
+rules:
+  no-console: off

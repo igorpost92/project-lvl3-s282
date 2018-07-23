@@ -13,6 +13,9 @@ publish: push;
 build:
 	npm run build	
 
+surge:
+	surge -p ./dist --domain rss-reader-post.surge.sh
+
 test:
 	npm test
 
