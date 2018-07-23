@@ -13,7 +13,8 @@
     "eslint": "eslint",
     "prebuild": "rm -rf dist",
     "build": "webpack --mode production",
-    "dev": "webpack -w --mode development --devtool source-map",
+    "dev": "npm run prebuild && webpack --mode development --devtool source-map",
+    "dev-watch": "npm run dev -- -w",
     "prepublishOnly": "npm run build"
   },
   "keywords": [],
