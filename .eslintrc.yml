@@ -9,6 +9,3 @@ env:
   jest: true
 
 parser: babel-eslint
-
-rules:
-  no-console: off
