@@ -1,0 +1,38 @@
+{
+  "name": "rss-reader-post",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igorpost92/project-lvl3-s282"
+  },
+  "scripts": {
+    "test": "jest",
+    "bn": "babel-node",
+    "eslint": "eslint",
+    "prebuild": "rm -rf dist",
+    "build": "babel src --out-dir dist --source-maps inline",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^5.2.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "jest": "^23.4.1"
+  },
+  "files": [
+    "dist"
+  ],
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
