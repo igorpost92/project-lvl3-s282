@@ -1,4 +1,4 @@
-push: lint test;
+push: lint;
 	git push
 
 build:
