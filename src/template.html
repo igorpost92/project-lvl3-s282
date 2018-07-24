@@ -3,6 +3,7 @@
 
 <head>
   <title>RSS Reader</title>
+  <meta charset="utf8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 
@@ -11,16 +12,27 @@
     <h1 class="display-4">Добро пожаловать в RR!</h1>
     <p class="lead">RSS Reader нового поколения.</p>
     <hr class="my-4">
-    <form>
+
+    <form id="new-feed">
       <div class="form-row">
         <div class="col-auto">
-          <button type="submit" class="btn btn-primary">Добавить</button>
+          <button id="add-new" type="submit" class="btn btn-primary" disabled>Добавить</button>
         </div>
         <div class="col-5">
-          <input type="text" class="form-control" id="source" placeholder="RSS поток">
+          <input type="text" class="form-control" id="link-field" name="link" placeholder="RSS поток" required>
+          <div id="error-message">Произошла ошибка при загрузке ресурса!</div>
+          <!-- class="invalid-feedback" -->
         </div>
       </div>
     </form>
+  </div>
+
+  <div class="wrapper">
+    <ul id="feed-list" class="sidebar list">
+    </ul>
+
+    <ul id="news-list" class="content list">
+    </ul>
   </div>
 
 </body>

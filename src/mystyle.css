@@ -1,0 +1,51 @@
+.wrapper {
+  display: flex;
+  padding: 0;
+  margin: -20px 0 0 0;
+}
+
+.wrapper>* {
+  margin: 0;
+  padding: 0;
+}
+
+.list {
+  list-style: none;
+}
+
+.item {
+  border: 1px solid silver;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.sidebar>.item {
+  background-color: powderblue;
+}
+
+.content>.item {
+  background-color: azure;
+}
+
+.content {
+  flex-grow: 2;
+}
+
+.sidebar {
+  min-width: 20%;
+}
+
+#error-message {
+  color: red;
+  margin: 5px 0 0 5px;
+  display: none;
+}
+
+#error-message.error {
+  display: block;
+}
+
+#link-field.error {
+  background-color: rgb(235, 103, 103);
+}
