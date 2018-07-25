@@ -1,10 +1,13 @@
-import 'jquery';
+import $ from 'jquery';
+import _ from 'lodash';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { watch } from 'melanke-watchjs';
 
 import { model as state, isLinkValid, isLinkInList } from './model';
-import { renderInfoMessage, renderContent, renderInputStatus } from './renderers';
+import {
+  renderInfoMessage, renderContent, renderInputStatus, renderModal,
+} from './renderers';
 
 export default () => {
   const form = document.querySelector('form');
@@ -32,6 +35,18 @@ export default () => {
     const isValid = link === '' || isLinkValid(link);
 
     renderInputStatus(isValid);
+  });
+
+  $('#details').on('show.bs.modal', (event) => {
+    const item = event.relatedTarget.closest('.list-group-item');
+    const ind = _.findIndex(document.querySelector('#news').children, el => el === item);
+
+    if (ind < 0) {
+      state.info = { status: 'danger', text: 'Блиныч! Неизвестная ошибка.' };
+      return;
+    }
+
+    renderModal(state.news[ind]);
   });
 
   watch(state, 'feeds', () => renderContent(state));
