@@ -17,7 +17,8 @@ const renderFeeds = (feeds) => {
       <h5>${title}</h5>
       <p class="mb-1">${desc}</p>
     </li>
-    `);
+    `)
+    .join('\n');
 
   document.querySelector('#feeds').innerHTML = html;
 };
@@ -28,7 +29,8 @@ const renderNews = (news) => {
       <h5>${title}</h5>
       <p class="mb-1">${text}</p>
     </li>
-    `);
+    `)
+    .join('\n');
 
   // TODO:
 
