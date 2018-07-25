@@ -2,12 +2,12 @@ import { isURL } from 'validator';
 
 import readRSS from './reader';
 
+const feedWasAdded = new Event('feedWasAdded');
+
 export default class Model {
   constructor() {
     this.feeds = [];
     this.news = [];
-
-    this.feedWasAdded = new Event('feedWasAdded');
   }
 
   isLinkValid(link) {
@@ -24,7 +24,7 @@ export default class Model {
         this.feeds.push({ ...feed, link });
         this.news = news.concat(this.news);
 
-        document.dispatchEvent(this.feedWasAdded);
+        document.dispatchEvent(feedWasAdded);
       })
       .catch(() => {
         // showError('Произошла ошибка при загрузке ресурса!'); // TODO:
