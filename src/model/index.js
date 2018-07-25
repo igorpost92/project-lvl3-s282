@@ -2,33 +2,33 @@ import { isURL } from 'validator';
 
 import readRSS from './reader';
 
-const feedWasAdded = new Event('feedWasAdded');
-const rssError = new Event('rssError');
-
-export default class Model {
-  constructor() {
-    this.feeds = [];
-    this.news = [];
-  }
-
-  isLinkValid(link) {
-    const isLink = isURL(link, { protocols: ['http', 'https'] });
-    const isExist = this.feeds.some(channel => channel.link === link);
-    const isValid = isLink && !isExist;
-
-    return isValid;
-  }
+export const model = {
+  feeds: [],
+  news: [],
+  info: {
+    status: '',
+    text: '',
+  },
 
   addChannel(link) {
     return readRSS(link)
       .then(({ news, ...feed }) => {
         this.feeds.push({ ...feed, link });
         this.news = news.concat(this.news);
-
-        document.dispatchEvent(feedWasAdded);
+        this.info = { status: 'success', text: 'Загрузка завершена.' };
       })
       .catch(() => {
-        document.dispatchEvent(rssError);
+        this.info = { status: 'danger', text: 'Произошла ошибка при загрузке ресурса!' };
       });
-  }
-}
+  },
+};
+
+export const isLinkInList = link => model.feeds.some(channel => channel.link === link);
+
+export const isLinkValid = (link) => {
+  const isLink = isURL(link, { protocols: ['http', 'https'] });
+  const isExist = isLinkInList(link);
+  const isValid = isLink && !isExist;
+
+  return isValid;
+};
