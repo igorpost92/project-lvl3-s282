@@ -3,6 +3,7 @@ import { isURL } from 'validator';
 import readRSS from './reader';
 
 const feedWasAdded = new Event('feedWasAdded');
+const rssError = new Event('rssError');
 
 export default class Model {
   constructor() {
@@ -27,7 +28,8 @@ export default class Model {
         document.dispatchEvent(feedWasAdded);
       })
       .catch(() => {
-        // showError('Произошла ошибка при загрузке ресурса!'); // TODO:
+        document.dispatchEvent(rssError);
+        // ; // TODO:
       });
   }
 }

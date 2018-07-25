@@ -3,7 +3,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Model from './model';
-import { renderContent, renderInputStatus } from './renderers'; // TODO:
+import { showError, renderContent, renderInputStatus } from './renderers';
 
 const state = new Model();
 
@@ -23,6 +23,7 @@ export default () => {
   });
 
   document.addEventListener('feedWasAdded', () => renderContent(state));
+  document.addEventListener('rssError', () => showError('Произошла ошибка при загрузке ресурса!'));
 
   const input = document.querySelector('input[name="link"]');
   input.addEventListener('input', ({ target }) => {
