@@ -29,7 +29,6 @@ export default class Model {
       })
       .catch(() => {
         document.dispatchEvent(rssError);
-        // ; // TODO:
       });
   }
 }
