@@ -1,50 +1,62 @@
-import $ from 'jquery';
+import 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { isURL } from 'validator';
 
 import read from './reader';
-import './mystyle.css';
 
 const state = {
   channels: [],
   news: [],
-  wasError: false,
+};
+
+const showError = (text) => {
+  const errorMessage = `
+  <div class="alert alert-danger fade show rounded" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <p class="mb-0">${text}</p>
+  </div>
+  `;
+
+  document.querySelector('#messages').innerHTML = errorMessage;
 };
 
 const isLinkValid = (link) => {
   const isLink = isURL(link, { protocols: ['http', 'https'] });
   const isExist = state.channels.some(channel => channel.link === link);
   const isValid = isLink && !isExist;
+
+  if (isExist) {
+    showError('Данный канал уже добавлен в список');
+  }
+
   return isValid;
 };
 
-const showError = () => {
-  $('#error-message, #link-field').toggleClass('error', state.wasError);
-};
-
 const render = () => {
-  $('#link-field').val('');
+  document.querySelector('#messages').innerHTML = '';
+  document.querySelector('#link-field').value = '';
 
   const createItem = ({ title, desc }) => {
-    const item = $(document.createElement('li')).addClass('item');
-
-    const header = document.createElement('h5');
-    $(header).text(title).appendTo(item);
-
-    const text = document.createElement('p');
-    $(text).text(desc).appendTo(item);
+    const item = document.createElement('li');
+    item.className = 'list-group-item';
+    item.innerHTML = `    
+      <h5>${title}</h5>
+      <p class="mb-1">${desc}</p>
+    `;
 
     return item;
   };
 
-  const feedList = $('#feed-list');
-  feedList.html('');
-  state.channels.forEach(channel => createItem(channel).appendTo(feedList));
+  const feedList = document.querySelector('#feed-list');
+  feedList.innerHTML = '';
+  state.channels.forEach(channel => feedList.appendChild(createItem(channel)));
 
-  const newsList = $('#news-list');
-  newsList.html('');
-  state.news.forEach(article => createItem(article).appendTo(newsList));
+  const newsList = document.querySelector('#news-list');
+  newsList.innerHTML = '';
+  state.news.forEach(article => newsList.appendChild(createItem(article)));
 };
 
 const addChannel = (link) => {
@@ -54,20 +66,17 @@ const addChannel = (link) => {
       state.news = news.concat(state.news);
 
       render();
-
-      state.wasError = false;
-      showError();
     })
     .catch(() => {
-      state.wasError = true;
-      showError();
+      showError('Произошла ошибка при загрузке ресурса!');
     });
 };
 
 export default () => {
-  $('#new-feed').on('submit', function submit(e) {
+  const form = document.querySelector('form');
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const data = new FormData(this);
+    const data = new FormData(form);
     const link = data.get('link');
     const isValid = isLinkValid(link);
 
@@ -78,11 +87,14 @@ export default () => {
     addChannel(link);
   });
 
-  $('#link-field').on('input', ({ target }) => {
+  const input = document.querySelector('input[name="link"]');
+  input.addEventListener('input', ({ target }) => {
     const link = target.value;
     const isValid = isLinkValid(link);
 
     target.classList.toggle('is-invalid', !isValid);
-    $('#add-new').prop('disabled', !isValid);
+    document.querySelector('#add-new').disabled = !isValid;
   });
+
+  addChannel('https://news.rambler.ru/rss/economics/');
 };

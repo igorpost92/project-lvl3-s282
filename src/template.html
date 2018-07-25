@@ -8,31 +8,28 @@
 </head>
 
 <body>
-  <div class="jumbotron">
+  <div class="jumbotron mb-3">
     <h1 class="display-4">Добро пожаловать в RR!</h1>
     <p class="lead">RSS Reader нового поколения.</p>
     <hr class="my-4">
 
-    <form id="new-feed">
+    <form>
       <div class="form-row">
         <div class="col-auto">
           <button id="add-new" type="submit" class="btn btn-primary" disabled>Добавить</button>
         </div>
         <div class="col-5">
           <input type="text" class="form-control" id="link-field" name="link" placeholder="RSS поток" required>
-          <div id="error-message">Произошла ошибка при загрузке ресурса!</div>
-          <!-- class="invalid-feedback" -->
         </div>
       </div>
     </form>
   </div>
 
-  <div class="wrapper">
-    <ul id="feed-list" class="sidebar list">
-    </ul>
+  <div id="messages" class="mx-2"></div>
 
-    <ul id="news-list" class="content list">
-    </ul>
+  <div class="d-flex">
+    <ul id="feed-list" class="list-group mx-2 w-50"></ul>
+    <ul id="news-list" class="list-group mx-2"></ul>
   </div>
 
 </body>
