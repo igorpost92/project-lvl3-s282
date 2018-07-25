@@ -14,7 +14,7 @@ const parseData = (data) => {
 
       const article = {};
       article.title = item.find('title').text();
-      article.desc = item.find('description').text();
+      article.text = item.find('description').text();
       return article;
     })
     .toArray();
