@@ -32,7 +32,7 @@ const onSubmit = (e, form) => {
 
 const onInput = ({ target }) => {
   const link = target.value;
-  const isValid = link === '' || isLinkValid(link);
+  const isValid = link === '' || (isLinkValid(link) && !state.hasFeed(link));
 
   renderInputStatus(isValid);
 };
