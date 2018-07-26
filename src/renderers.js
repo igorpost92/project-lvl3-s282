@@ -8,7 +8,7 @@ export const renderInfoMessage = ({ status, text }) => {
   </div>
   `;
 
-  document.querySelector('#messages').innerHTML = message;
+  document.getElementById('messages').innerHTML = message;
 };
 
 const renderFeeds = (feeds) => {
@@ -20,11 +20,11 @@ const renderFeeds = (feeds) => {
     `)
     .join('\n');
 
-  document.querySelector('#feeds').innerHTML = html;
+  document.getElementById('feeds').innerHTML = html;
 };
 
-const renderNews = (news) => {
-  const html = news.map(({ title }) => `
+const renderArticles = (articles) => {
+  const html = articles.map(({ title }) => `
     <li class="list-group-item d-flex my-1">
       <button type="button" class="btn btn-info rounded-circle" data-toggle="modal" data-target="#details">
         ...
@@ -36,27 +36,14 @@ const renderNews = (news) => {
     `)
     .join('\n');
 
-  document.querySelector('#news').innerHTML = html;
-
-  // TODO:
-  //
-  // data-title="${title}" data-text="${text}" --- to use or not to use?
-  //
-  // $('#details').on('show.bs.modal', function show(event) {
-  //   const button = $(event.relatedTarget);
-  //   const title = button.data('title');
-  //   const text = button.data('text');
-  //   const modal = $(this);
-  //   modal.find('.modal-title').text(title);
-  //   modal.find('.modal-body').text(text);
-  // });
+  document.getElementById('news').innerHTML = html;
 };
 
-export const renderContent = ({ feeds, news }) => {
-  document.querySelector('#link-field').value = '';
+export const renderContent = ({ feeds, articles }) => {
+  document.getElementById('link-field').value = '';
 
   renderFeeds(feeds);
-  renderNews(news);
+  renderArticles(articles);
 };
 
 export const renderInputStatus = (isValid) => {
@@ -65,7 +52,7 @@ export const renderInputStatus = (isValid) => {
 };
 
 export const renderModal = ({ title, text }) => {
-  const modal = document.querySelector('#details');
+  const modal = document.getElementById('details');
   modal.querySelector('.modal-title').textContent = title;
   modal.querySelector('.modal-body').textContent = text;
 };
