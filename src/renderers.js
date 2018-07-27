@@ -1,4 +1,8 @@
 export const renderInfoMessage = ({ status, text }) => {
+  if (status === 'success') {
+    document.getElementById('link-field').value = '';
+  }
+
   const message = text === '' ? '' : `
   <div class="alert alert-${status} fade show rounded" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -37,13 +41,6 @@ export const renderArticles = (articles) => {
     .join('\n');
 
   document.getElementById('news').innerHTML = html;
-};
-
-export const renderContent = ({ feeds, articles }) => { // TODO:
-  document.getElementById('link-field').value = '';
-
-  renderFeeds(feeds);
-  renderArticles(articles);
 };
 
 export const renderInputStatus = (isValid) => {
