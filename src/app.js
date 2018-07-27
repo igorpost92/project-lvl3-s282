@@ -11,8 +11,7 @@ import {
 } from './renderers';
 
 
-const state = new State();
-
+let state;
 
 // TODO: content-loader - think about own module
 
@@ -92,6 +91,8 @@ const refreshContent = () => {
 
 
 export default () => {
+  state = new State();
+
   const form = document.querySelector('form');
   form.addEventListener('submit', e => onSubmit(e, form));
 
