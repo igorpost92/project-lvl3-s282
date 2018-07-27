@@ -7,7 +7,7 @@ import { watch } from 'melanke-watchjs';
 import State from './state';
 import readRSS, { isLinkValid } from './reader';
 import {
-  renderInfoMessage, renderFeeds, renderArticles, renderInputStatus, renderModal,
+  renderInfoMessage, renderFeeds, renderArticles, renderInputStatus, renderModal, renderLoading,
 } from './renderers';
 
 
@@ -28,7 +28,10 @@ const loadContent = link => loadData(link)
     state.setInfoMessage('success', 'Загрузка завершена.');
     state.setInputStatus('empty');
   })
-  .catch(() => state.setInfoMessage('danger', 'Произошла ошибка при загрузке ресурса!'));
+  .catch(() => state.setInfoMessage('danger', 'Произошла ошибка при загрузке ресурса!'))
+  .finally(() => {
+    state.isLoading = false;
+  });
 
 const updateContent = () => {
   const links = state.feeds.map(({ link }) => link);
@@ -59,6 +62,7 @@ const onSubmit = (e, form) => {
     return;
   }
 
+  state.isLoading = true;
   loadContent(link);
 };
 
@@ -106,7 +110,6 @@ export default () => {
   input.addEventListener('input', onInput);
 
   $('#details').on('show.bs.modal', (e) => {
-    e.stopImmediatePropagation();
     onNewsClick(e);
   });
 
@@ -114,6 +117,7 @@ export default () => {
   watch(state, 'articles', () => renderArticles(state.articles));
   watch(state, 'info', () => renderInfoMessage(state.info));
   watch(state, 'inputStatus', () => renderInputStatus(state.inputStatus));
+  watch(state, 'isLoading', () => renderLoading(state.isLoading));
 
   refreshContent();
 };

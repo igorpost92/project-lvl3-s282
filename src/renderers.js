@@ -55,3 +55,9 @@ export const renderModal = ({ title, text }) => {
   modal.querySelector('.modal-title').textContent = title;
   modal.querySelector('.modal-body').textContent = text;
 };
+
+export const renderLoading = (isLoading) => {
+  const button = document.querySelector('button[type="submit"]');
+  button.disabled = isLoading;
+  button.textContent = isLoading ? 'Загрузка...' : 'Добавить';
+};

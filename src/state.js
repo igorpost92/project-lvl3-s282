@@ -6,6 +6,7 @@ export default class State {
     this.articles = [];
     this.info = { status: '', text: '' };
     this.inputStatus = 'empty';
+    this.isLoading = false;
   }
 
   addFeed(feed) {
