@@ -5,12 +5,45 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { watch } from 'melanke-watchjs';
 
 import State from './state';
-import { isLinkValid } from './reader';
+import readRSS, { isLinkValid } from './reader';
 import {
-  renderInfoMessage, renderContent, renderInputStatus, renderModal,
+  renderInfoMessage, renderFeeds, renderArticles, renderInputStatus, renderModal,
 } from './renderers';
 
+
 const state = new State();
+
+
+// TODO: content-loader - think about own module
+
+const loadData = link => readRSS(link)
+  .then(({ articles, ...feed }) => {
+    const newFeed = { ...feed, link };
+    return { feed: newFeed, articles };
+  });
+
+const loadContent = link => loadData(link)
+  .then(({ feed, articles }) => {
+    state.addFeed(feed);
+    state.addArticles(articles);
+    state.setInfoMessage('success', 'Загрузка завершена.');
+  })
+  .catch(() => state.setInfoMessage('danger', 'Произошла ошибка при загрузке ресурса!'));
+
+const updateContent = () => {
+  const links = state.feeds.map(({ link }) => link);
+  return Promise.all(links.map(loadData))
+    .then((data) => {
+      if (!data.length) {
+        return;
+      }
+
+      data.forEach(({ articles }) => state.addArticles(articles));
+    });
+};
+
+//
+
 
 const onSubmit = (e, form) => {
   e.preventDefault();
@@ -18,16 +51,15 @@ const onSubmit = (e, form) => {
   const link = data.get('link');
 
   if (state.hasFeed(link)) {
-    state.info = { status: 'danger', text: 'Данный канал уже есть в списке.' }; // TODO:
+    state.setInfoMessage('danger', 'Данный канал уже есть в списке.');
     return;
   }
-
   if (!isLinkValid(link)) {
-    state.info = { status: 'danger', text: 'Введенная ссылка некорректна.' };
+    state.setInfoMessage('danger', 'Введенная ссылка некорректна.');
     return;
   }
 
-  state.addChannel(link);
+  loadContent(link);
 };
 
 const onInput = ({ target }) => {
@@ -49,6 +81,16 @@ const onNewsClick = (e) => {
   renderModal(state.articles[ind]);
 };
 
+
+const refreshInterval = 5000;
+
+const refreshContent = () => {
+  updateContent()
+    .catch(() => state.setInfoMessage('danger', 'Произошла ошибка при обновлении новостей!'))
+    .then(() => setTimeout(refreshContent, refreshInterval));
+};
+
+
 export default () => {
   const form = document.querySelector('form');
   form.addEventListener('submit', e => onSubmit(e, form));
@@ -58,6 +100,9 @@ export default () => {
 
   $('#details').on('show.bs.modal', onNewsClick);
 
-  watch(state, 'articles', () => renderContent(state));
+  watch(state, 'feeds', () => renderFeeds(state.feeds));
+  watch(state, 'articles', () => renderArticles(state.articles));
   watch(state, 'info', () => renderInfoMessage(state.info));
+
+  refreshContent();
 };

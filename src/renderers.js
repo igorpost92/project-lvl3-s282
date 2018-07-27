@@ -11,7 +11,7 @@ export const renderInfoMessage = ({ status, text }) => {
   document.getElementById('messages').innerHTML = message;
 };
 
-const renderFeeds = (feeds) => {
+export const renderFeeds = (feeds) => {
   const html = feeds.map(({ title, desc }) => `
     <li class="list-group-item">
       <h5>${title}</h5>
@@ -23,7 +23,7 @@ const renderFeeds = (feeds) => {
   document.getElementById('feeds').innerHTML = html;
 };
 
-const renderArticles = (articles) => {
+export const renderArticles = (articles) => {
   const html = articles.map(({ title }) => `
     <li class="list-group-item d-flex my-1">
       <button type="button" class="btn btn-info rounded-circle" data-toggle="modal" data-target="#details">
@@ -39,7 +39,7 @@ const renderArticles = (articles) => {
   document.getElementById('news').innerHTML = html;
 };
 
-export const renderContent = ({ feeds, articles }) => {
+export const renderContent = ({ feeds, articles }) => { // TODO:
   document.getElementById('link-field').value = '';
 
   renderFeeds(feeds);

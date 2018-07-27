@@ -7,7 +7,7 @@ const parseData = (data) => {
   const title = doc.querySelector('title').textContent;
   const desc = doc.querySelector('description').textContent;
 
-  const news = [...doc.querySelectorAll('item')]
+  const articles = [...doc.querySelectorAll('item')]
     .map((item) => {
       const article = {};
       article.title = item.querySelector('title').textContent;
@@ -16,7 +16,7 @@ const parseData = (data) => {
       return article;
     });
 
-  return { title, desc, news };
+  return { title, desc, articles };
 };
 
 export const isLinkValid = link => isURL(link, { protocols: ['http', 'https'] });
