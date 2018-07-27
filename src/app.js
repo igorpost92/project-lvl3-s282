@@ -116,7 +116,7 @@ export default () => {
 
   watch(state, 'currentArticle', () => {
     const ind = state.currentArticle;
-    if (ind) {
+    if (ind != null) {
       showModal(state.articles[ind]);
     }
   });

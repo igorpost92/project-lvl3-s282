@@ -27,6 +27,10 @@ export const renderFeeds = (feeds) => {
 };
 
 const onNewsClick = ({ target }, showArticle) => {
+  if (!target.matches('button[data-toggle="modal"]')) {
+    return;
+  }
+
   const item = target.closest('.list-group-item');
   const ind = _.findIndex(document.getElementById('news').children, el => el === item);
 
@@ -47,13 +51,9 @@ export const renderArticles = (articles, showArticle) => {
     `)
     .join('\n');
 
-  document.getElementById('news').innerHTML = html;
-
-  const buttons = document.querySelectorAll('button[data-toggle="modal"]');
-
-  buttons.forEach((button) => {
-    button.addEventListener('click', e => onNewsClick(e, showArticle));
-  });
+  const div = document.getElementById('news');
+  div.innerHTML = html;
+  div.addEventListener('click', e => onNewsClick(e, showArticle));
 };
 
 export const renderInputStatus = (status) => {
