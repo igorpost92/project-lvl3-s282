@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'lodash';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { watch } from 'melanke-watchjs';
@@ -7,7 +6,7 @@ import { watch } from 'melanke-watchjs';
 import State from './state';
 import readRSS, { isLinkValid } from './reader';
 import {
-  renderInfoMessage, renderFeeds, renderArticles, renderInputStatus, renderModal, renderLoading,
+  renderInfoMessage, renderFeeds, renderArticles, renderInputStatus, showModal, renderLoading,
 } from './renderers';
 
 
@@ -78,18 +77,6 @@ const onInput = ({ target }) => {
   }
 };
 
-const onNewsClick = (e) => {
-  const item = e.relatedTarget.closest('.list-group-item');
-  const ind = _.findIndex(document.getElementById('news').children, el => el === item);
-
-  if (ind < 0) {
-    state.info = { status: 'danger', text: 'Блиныч! Неизвестная ошибка.' };
-    return;
-  }
-
-  renderModal(state.articles[ind]);
-};
-
 
 const refreshInterval = 5000;
 
@@ -109,15 +96,30 @@ export default () => {
   const input = document.querySelector('input[name="link"]');
   input.addEventListener('input', onInput);
 
-  $('#details').on('show.bs.modal', (e) => {
-    onNewsClick(e);
+  $('#details').on('hide.bs.modal', () => {
+    state.currentArticle = null;
   });
 
   watch(state, 'feeds', () => renderFeeds(state.feeds));
-  watch(state, 'articles', () => renderArticles(state.articles));
+
+  watch(state, 'articles', () => {
+    const showArticle = (ind) => {
+      state.currentArticle = ind;
+    };
+
+    renderArticles(state.articles, showArticle);
+  });
+
   watch(state, 'info', () => renderInfoMessage(state.info));
   watch(state, 'inputStatus', () => renderInputStatus(state.inputStatus));
   watch(state, 'isLoading', () => renderLoading(state.isLoading));
+
+  watch(state, 'currentArticle', () => {
+    const ind = state.currentArticle;
+    if (ind) {
+      showModal(state.articles[ind]);
+    }
+  });
 
   refreshContent();
 };

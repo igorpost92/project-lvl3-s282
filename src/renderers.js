@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import _ from 'lodash';
+
 export const renderInfoMessage = ({ status, text }) => {
   const message = text === '' ? '' : `
   <div class="alert alert-${status} fade show rounded" role="alert">
@@ -23,11 +26,20 @@ export const renderFeeds = (feeds) => {
   document.getElementById('feeds').innerHTML = html;
 };
 
+const onNewsClick = ({ target }, showArticle) => {
+  const item = target.closest('.list-group-item');
+  const ind = _.findIndex(document.getElementById('news').children, el => el === item);
+
+  // TODO: how to change info message state?
+
+  showArticle(ind);
+};
+
 // TODO: rerendrer only new items
-export const renderArticles = (articles) => {
+export const renderArticles = (articles, showArticle) => {
   const html = articles.map(({ title }) => `
     <li class="list-group-item d-flex my-1">
-      <button type="button" class="btn btn-info rounded-circle" data-toggle="modal" data-target="#details">
+      <button type="button" class="btn btn-info rounded-circle" data-toggle="modal">
         ...
       </button>
       <div class="d-flex flex-column justify-content-center ml-3">
@@ -38,6 +50,12 @@ export const renderArticles = (articles) => {
     .join('\n');
 
   document.getElementById('news').innerHTML = html;
+
+  const buttons = document.querySelectorAll('button[data-toggle="modal"]');
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', e => onNewsClick(e, showArticle));
+  });
 };
 
 export const renderInputStatus = (status) => {
@@ -50,10 +68,12 @@ export const renderInputStatus = (status) => {
   }
 };
 
-export const renderModal = ({ title, text }) => {
+export const showModal = ({ title, text }) => {
   const modal = document.getElementById('details');
   modal.querySelector('.modal-title').textContent = title;
   modal.querySelector('.modal-body').textContent = text;
+
+  $(modal).modal('show');
 };
 
 export const renderLoading = (isLoading) => {
