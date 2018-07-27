@@ -1,8 +1,4 @@
 export const renderInfoMessage = ({ status, text }) => {
-  if (status === 'success') {
-    document.getElementById('link-field').value = '';
-  }
-
   const message = text === '' ? '' : `
   <div class="alert alert-${status} fade show rounded" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -27,6 +23,7 @@ export const renderFeeds = (feeds) => {
   document.getElementById('feeds').innerHTML = html;
 };
 
+// TODO: rerendrer only new items
 export const renderArticles = (articles) => {
   const html = articles.map(({ title }) => `
     <li class="list-group-item d-flex my-1">
@@ -43,9 +40,14 @@ export const renderArticles = (articles) => {
   document.getElementById('news').innerHTML = html;
 };
 
-export const renderInputStatus = (isValid) => {
-  const input = document.querySelector('input[name="link"]');
-  input.classList.toggle('is-invalid', !isValid);
+export const renderInputStatus = (status) => {
+  const isInvalid = status === 'invalid';
+  const input = document.getElementById('link-field');
+  input.classList.toggle('is-invalid', isInvalid);
+
+  if (status === 'empty') {
+    input.value = '';
+  }
 };
 
 export const renderModal = ({ title, text }) => {

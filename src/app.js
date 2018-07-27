@@ -26,6 +26,7 @@ const loadContent = link => loadData(link)
     state.addFeed(feed);
     state.addArticles(articles);
     state.setInfoMessage('success', 'Загрузка завершена.');
+    state.setInputStatus('empty');
   })
   .catch(() => state.setInfoMessage('danger', 'Произошла ошибка при загрузке ресурса!'));
 
@@ -63,9 +64,14 @@ const onSubmit = (e, form) => {
 
 const onInput = ({ target }) => {
   const link = target.value;
-  const isValid = link === '' || (isLinkValid(link) && !state.hasFeed(link));
 
-  renderInputStatus(isValid);
+  if (link === '') {
+    state.setInputStatus('empty');
+  } else if (isLinkValid(link) && !state.hasFeed(link)) {
+    state.setInputStatus('valid');
+  } else {
+    state.setInputStatus('invalid');
+  }
 };
 
 const onNewsClick = (e) => {
@@ -99,11 +105,15 @@ export default () => {
   const input = document.querySelector('input[name="link"]');
   input.addEventListener('input', onInput);
 
-  $('#details').on('show.bs.modal', onNewsClick);
+  $('#details').on('show.bs.modal', (e) => {
+    e.stopImmediatePropagation();
+    onNewsClick(e);
+  });
 
   watch(state, 'feeds', () => renderFeeds(state.feeds));
   watch(state, 'articles', () => renderArticles(state.articles));
   watch(state, 'info', () => renderInfoMessage(state.info));
+  watch(state, 'inputStatus', () => renderInputStatus(state.inputStatus));
 
   refreshContent();
 };

@@ -5,6 +5,7 @@ export default class State {
     this.feeds = [];
     this.articles = [];
     this.info = { status: '', text: '' };
+    this.inputStatus = 'empty';
   }
 
   addFeed(feed) {
@@ -23,6 +24,10 @@ export default class State {
 
   setInfoMessage(status, text) {
     this.info = { status, text };
+  }
+
+  setInputStatus(status) {
+    this.inputStatus = status;
   }
 
   hasFeed(link) {
