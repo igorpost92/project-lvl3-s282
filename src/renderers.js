@@ -30,8 +30,6 @@ const onNewsClick = ({ target }, showArticle) => {
   const item = target.closest('.list-group-item');
   const ind = _.findIndex(document.getElementById('news').children, el => el === item);
 
-  // TODO: how to change info message state?
-
   showArticle(ind);
 };
 
