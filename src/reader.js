@@ -1,4 +1,5 @@
 import { isURL } from 'validator';
+import { get } from 'axios';
 
 const parseData = (data) => {
   const parser = new DOMParser();
@@ -28,15 +29,13 @@ export default (link) => {
 
   const proxy = 'https://cors-anywhere.herokuapp.com/';
 
-  return fetch(`${proxy}${link}`)
+  return get(`${proxy}${link}`)
     .then((res) => {
       if (res.status !== 200) {
         throw new Error(`code ${res.status}: ${res.statusTest}`);
       }
-      return res.text();
-    })
-    .then((data) => {
-      const feed = parseData(data);
+
+      const feed = parseData(res.data);
       return feed;
     });
 };
