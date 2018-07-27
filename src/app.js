@@ -87,7 +87,7 @@ const refreshInterval = 5000;
 const refreshContent = () => {
   updateContent()
     .catch(() => state.setInfoMessage('danger', 'Произошла ошибка при обновлении новостей!'))
-    .then(() => setTimeout(refreshContent, refreshInterval));
+    .finally(() => setTimeout(refreshContent, refreshInterval));
 };
 
 
