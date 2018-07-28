@@ -31,6 +31,10 @@ export default class State {
     this.inputStatus = status;
   }
 
+  setLoadingStatus(isLoading) {
+    this.isLoading = isLoading;
+  }
+
   hasFeed(link) {
     return this.feeds.some(feed => feed.link === link);
   }

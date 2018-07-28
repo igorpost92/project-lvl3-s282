@@ -10,8 +10,6 @@ import {
 } from './renderers';
 
 
-let state;
-
 // TODO: content-loader - think about own module
 
 const loadData = link => readRSS(link)
@@ -20,7 +18,7 @@ const loadData = link => readRSS(link)
     return { feed: newFeed, articles };
   });
 
-const loadContent = link => loadData(link)
+const loadContent = (link, state) => loadData(link)
   .then(({ feed, articles }) => {
     state.addFeed(feed);
     state.addArticles(articles);
@@ -29,10 +27,10 @@ const loadContent = link => loadData(link)
   })
   .catch(() => state.setInfoMessage('danger', 'Произошла ошибка при загрузке ресурса!'))
   .finally(() => {
-    state.isLoading = false;
+    state.setLoadingStatus(false);
   });
 
-const updateContent = () => {
+const updateContent = (state) => {
   const links = state.feeds.map(({ link }) => link);
   return Promise.all(links.map(loadData))
     .then((data) => {
@@ -47,7 +45,7 @@ const updateContent = () => {
 //
 
 
-const onSubmit = (e, form) => {
+const onSubmit = (e, form, state) => {
   e.preventDefault();
   const data = new FormData(form);
   const link = data.get('link');
@@ -61,11 +59,11 @@ const onSubmit = (e, form) => {
     return;
   }
 
-  state.isLoading = true;
-  loadContent(link);
+  state.setLoadingStatus(true);
+  loadContent(link, state);
 };
 
-const onInput = ({ target }) => {
+const onInput = ({ target }, state) => {
   const link = target.value;
 
   if (link === '') {
@@ -78,23 +76,21 @@ const onInput = ({ target }) => {
 };
 
 
-const refreshInterval = 5000;
-
-const refreshContent = () => {
-  updateContent()
+const refreshContent = (state, refreshInterval) => {
+  updateContent(state)
     .catch(() => state.setInfoMessage('danger', 'Произошла ошибка при обновлении новостей!'))
-    .finally(() => setTimeout(refreshContent, refreshInterval));
+    .finally(() => setTimeout(refreshContent, refreshInterval, state));
 };
 
 
 export default () => {
-  state = new State();
+  const state = new State();
 
   const form = document.querySelector('form');
-  form.addEventListener('submit', e => onSubmit(e, form));
+  form.addEventListener('submit', e => onSubmit(e, form, state));
 
   const input = document.querySelector('input[name="link"]');
-  input.addEventListener('input', onInput);
+  input.addEventListener('input', e => onInput(e, state));
 
   $('#details').on('hide.bs.modal', () => {
     state.currentArticle = null;
@@ -121,5 +117,6 @@ export default () => {
     }
   });
 
-  refreshContent();
+  const refreshInterval = 5000;
+  refreshContent(state, refreshInterval);
 };
