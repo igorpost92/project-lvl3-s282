@@ -1,12 +1,12 @@
 export default class State {
-  cache = new Set();
-
   constructor() {
     this.feeds = [];
     this.articles = [];
     this.info = { status: '', text: '' };
     this.inputStatus = 'empty';
     this.isLoading = false;
+
+    this.links = new Set();
   }
 
   addFeed(feed) {
@@ -14,12 +14,12 @@ export default class State {
   }
 
   addArticles(articles) {
-    const newItems = articles.filter(({ link }) => !this.cache.has(link));
+    const newItems = articles.filter(({ link }) => !this.links.has(link));
     if (!newItems.length) {
       return;
     }
 
-    newItems.forEach(({ link }) => this.cache.add(link));
+    newItems.forEach(({ link }) => this.links.add(link));
     this.articles.unshift(...newItems);
   }
 
