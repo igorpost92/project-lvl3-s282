@@ -3,7 +3,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { watch } from 'melanke-watchjs';
 
-import State from './state';
+import State from './State';
 import readRSS, { isLinkValid } from './reader';
 import {
   renderInfoMessage, renderFeeds, renderArticles, renderInputStatus, showModal, renderLoading,
