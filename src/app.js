@@ -26,9 +26,7 @@ const loadContent = (link, state) => loadData(link)
     state.setInputStatus('empty');
   })
   .catch(() => state.setInfoMessage('danger', 'Произошла ошибка при загрузке ресурса!'))
-  .finally(() => {
-    state.setLoadingStatus(false);
-  });
+  .finally(() => state.setLoadingStatus(false));
 
 const updateContent = (state) => {
   const links = state.feeds.map(({ link }) => link);
@@ -45,7 +43,7 @@ const updateContent = (state) => {
 //
 
 
-const onSubmit = (e, form, state) => {
+const onSubmit = (form, state, e) => {
   e.preventDefault();
   const data = new FormData(form);
   const link = data.get('link');
@@ -63,7 +61,7 @@ const onSubmit = (e, form, state) => {
   loadContent(link, state);
 };
 
-const onInput = ({ target }, state) => {
+const onInput = (state, { target }) => {
   const link = target.value;
 
   if (link === '') {
@@ -87,10 +85,10 @@ export default () => {
   const state = new State();
 
   const form = document.querySelector('form');
-  form.addEventListener('submit', e => onSubmit(e, form, state));
+  form.addEventListener('submit', onSubmit.bind(null, form, state));
 
   const input = document.querySelector('input[name="link"]');
-  input.addEventListener('input', e => onInput(e, state));
+  input.addEventListener('input', onInput.bind(null, state));
 
   $('#details').on('hide.bs.modal', () => {
     state.currentArticle = null;
